@@ -1,25 +1,31 @@
 package com.udu3324.tasks;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ScammerInfo {
-    public static String[] get(String uuid) {
+    public static String[] get(String uuid) throws IOException {
         String[] str = new String[2];
-        try {
-            uuid = uuid.replace("-", "");
-            File myObj = new File("data/" + uuid + ".txt");
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                str[0] = myReader.nextLine();
-                str[1] = myReader.nextLine();
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+        String[] data = str();
+        int getIndex = Arrays.asList(str()).indexOf(uuid);
+        str[0] = data[getIndex + 1]; //what they stole
+        str[1] = data[getIndex + 2]; //proof
         return str;
+    }
+
+    private static String[] str() throws IOException {
+        FileReader fileReader = new FileReader("confirmed.txt");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        List<String> lines = new ArrayList<>();
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            lines.add(line);
+        }
+        bufferedReader.close();
+        return lines.toArray(new String[0]);
     }
 }

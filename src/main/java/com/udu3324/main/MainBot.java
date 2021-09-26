@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
+import java.io.IOException;
 
 public class MainBot {
     public static void main(String[] args) throws LoginException {
@@ -21,28 +22,28 @@ public class MainBot {
                 .setActivity(Activity.playing(Data.activity))
                 .build();
 
-        File file = new File("data");
-        if (!file.exists()) {
-            boolean result = file.mkdir();
-            if (result) {
-                System.out.println("Successfully created " + file.getAbsolutePath());
+        File confirmed = new File("confirmed.txt");
+        try {
+            if (confirmed.createNewFile()) {
+                System.out.println("File created: " + confirmed.getName());
             } else {
-                System.out.println("Failed creating " + file.getAbsolutePath());
+                System.out.println("File already exists: " + confirmed.getName());
             }
-        } else {
-            System.out.println("\"data\" directory exists.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
         }
 
-        File file2 = new File("unconfirmed");
-        if (!file2.exists()) {
-            boolean result = file2.mkdir();
-            if (result) {
-                System.out.println("Successfully created " + file2.getAbsolutePath());
+        File unconfirmed = new File("unconfirmed.txt");
+        try {
+            if (unconfirmed.createNewFile()) {
+                System.out.println("File created: " + unconfirmed.getName());
             } else {
-                System.out.println("Failed creating " + file2.getAbsolutePath());
+                System.out.println("File already exists: " + unconfirmed.getName());
             }
-        } else {
-            System.out.println("\"unconfirmed\" directory exists.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
         }
     }
 }

@@ -28,7 +28,12 @@ public class Check extends ListenerAdapter {
             long waitTime = RandomInt.get(3000, 6000);
             String input = check.getContentRaw().substring(7);
 
-            channel.sendMessage("Searching Database...").queue(message -> message.delete().queueAfter(waitTime, TimeUnit.MILLISECONDS));
+            channel.sendMessage("`[---] Searching Database`").queue(message -> {
+                message.editMessage("`[#--] Searching Database`").queueAfter(waitTime / 4, TimeUnit.MILLISECONDS);
+                message.editMessage("`[##-] Searching Database`").queueAfter(waitTime / 4 + waitTime / 4, TimeUnit.MILLISECONDS);
+                message.editMessage("`[###] Searching Database`").queueAfter(waitTime / 4 + waitTime / 4 + waitTime / 4, TimeUnit.MILLISECONDS);
+                message.delete().queueAfter(waitTime, TimeUnit.MILLISECONDS);
+            });
 
             Timer timer = new Timer();
             TimerTask task = new TimerTask() {
@@ -65,7 +70,10 @@ public class Check extends ListenerAdapter {
                                     String currentString = currentArray.toString();
                                     int nameIndex = currentString.indexOf("\"name\":\"") + 8;
                                     int nameIndex2 = currentString.indexOf("\",\"");
-                                    if (nameIndex2 == -1) {
+                                    if (nameIndex2 <= -1) {
+                                        nameIndex2 = currentString.indexOf("\"}");
+                                        String ign = currentString.substring(nameIndex, nameIndex2);
+                                        pastIGNField.append(ign);
                                         break;
                                     }
                                     String ign = currentString.substring(nameIndex, nameIndex2);
@@ -74,8 +82,8 @@ public class Check extends ListenerAdapter {
                                     String time = currentString.substring(timeIndex, timeIndex2);
 
                                     long unixSeconds = Long.parseLong(time);
-                                    Date date = new java.util.Date(unixSeconds * 1000L);
-                                    SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMMMMMMM dd");
+                                    Date date = new java.util.Date(unixSeconds);
+                                    SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMMMMMMM dd, yyyy");
                                     String formattedDate = sdf.format(date);
                                     pastIGNField.append(ign).append(" - ").append(formattedDate).append("\n");
                                     arrayIndex--;

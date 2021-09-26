@@ -2,7 +2,7 @@ package com.udu3324.commands.member;
 
 import com.udu3324.main.Data;
 import com.udu3324.tasks.AlreadyReported;
-import com.udu3324.tasks.CreateScammerInfo;
+import com.udu3324.tasks.CreateReport;
 import com.udu3324.tasks.ScammerStatus;
 import com.udu3324.tasks.StaffCheck;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -88,13 +88,13 @@ public class Report extends ListenerAdapter {
                                             eb2.addField("Scammed For", scammedFor, false);
                                             eb2.addField("Proof", videoLink, false);
                                             eb2.addField("Reported By", "<@" + userID + ">", false);
-                                            eb2.setColor(new Color(0xFFFFFF));
+                                            eb2.setColor(new Color(0x181818));
                                             eb2.setFooter("To report another scammer, do \"" + Data.command + "report [player-ign/uuid] - [what they scammed] - [youtube link]\" again.");
                                             report.reply(eb2.build()).queue(message -> {
                                                 message.addReaction("\u2705").queue();
                                                 message.addReaction("\u274E").queue();
                                             });
-                                            CreateScammerInfo.create(UUID, scammedFor, videoLink);
+                                            CreateReport.create(UUID, scammedFor, videoLink);
                                         }
                                     }
                                 }
