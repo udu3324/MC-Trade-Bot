@@ -82,8 +82,8 @@ public class Report extends ListenerAdapter {
                                             String videoLink = input.substring(secondVerticalBar + 3);
 
                                             EmbedBuilder eb2 = new EmbedBuilder();
-                                            eb2.setAuthor(IGN + " (report is in progress of being confirmed)", null, null);
-                                            eb2.setDescription("[" + UUID + "](https://namemc.com/profile/" + checkForIGN + ")\n" + "This person is a **REPORTED** scammer! (doesn't mean that it's confirmed scammer) Don't trade with them unless you know what you're doing!");
+                                            eb2.setAuthor(IGN + " (report waiting to be confirmed)", null, null);
+                                            eb2.setDescription("[" + UUID + "](https://namemc.com/profile/" + checkForIGN + ")\n" + "This person is a **REPORTED** scammer! Don't trade with them unless you know what you're doing!");
                                             eb2.setThumbnail("https://crafatar.com/renders/body/" + UUID + "?overlay");
                                             eb2.addField("Scammed For", scammedFor, false);
                                             eb2.addField("Proof", videoLink, false);

@@ -105,7 +105,7 @@ public class Check extends ListenerAdapter {
                             } else {
                                 EmbedBuilder eb = new EmbedBuilder();
                                 eb.setAuthor(IGN2, null, null);
-                                eb.setDescription("[" + UUID + "](https://namemc.com/profile/" + IGN2 + ")\n" + "This person is a not a scammer. You don't have to worry that much.");
+                                eb.setDescription("[" + UUID + "](https://namemc.com/profile/" + IGN2 + ")\n" + "This person is not a scammer. You don't have to worry that much.");
                                 eb.setThumbnail("https://crafatar.com/renders/body/" + UUID + "?overlay");
                                 eb.setColor(new Color(0xA1DC5C));
                                 eb.setFooter("To check for another scammer, do \"" + Data.command + "check [insert ign/uuid]\" again.");
