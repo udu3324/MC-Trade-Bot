@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import java.awt.*;
 
 public class Help extends ListenerAdapter {
+    //help command
     public void onMessageReceived(MessageReceivedEvent event) {
         Message help = event.getMessage();
 

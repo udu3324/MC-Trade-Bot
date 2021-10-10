@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ScammerStatus {
+public class ScammerStatusDatabase {
+    //Class Info - .get returns if uuid is a scammer in the database
     public static boolean get(String uuid) throws IOException {
         uuid = uuid.replace("-", "");
         return Arrays.asList(str()).contains(uuid);

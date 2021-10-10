@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class Ping extends ListenerAdapter {
+    //ping command n stuff
     public void onMessageReceived(MessageReceivedEvent event) {
         Message ping = event.getMessage();
         if (ping.getContentRaw().equals(Data.command + "ping")) {

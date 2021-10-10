@@ -3,7 +3,7 @@ package com.udu3324.commands.member;
 import com.udu3324.main.Data;
 import com.udu3324.tasks.AlreadyReported;
 import com.udu3324.tasks.CreateReport;
-import com.udu3324.tasks.ScammerStatus;
+import com.udu3324.tasks.ScammerStatusDatabase;
 import com.udu3324.tasks.StaffCheck;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -36,6 +36,7 @@ public class Report extends ListenerAdapter {
             if (report.isFromType(ChannelType.TEXT)) {
                 if (report.getChannel() == Data.report) {
 
+                    //filter out messages with only report and nothing else in it
                     if (report.getContentRaw().equals(Data.command + "report")) {
                         report.reply(eb.build()).queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));
                         report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
@@ -43,7 +44,7 @@ public class Report extends ListenerAdapter {
                         try {
                             String input = report.getContentRaw();
 
-                            int firstVerticalBar = input.indexOf(" - ");
+                            int firstArgumentSeparator = input.indexOf(" - ");
                             int lastIndex = 0;
                             int count = 0;
                             while (lastIndex != -1) {
@@ -54,32 +55,39 @@ public class Report extends ListenerAdapter {
                                 }
                             }
                             if (count == 2) {
-                                String ignOrUUID = input.substring(8, firstVerticalBar);
+                                String ignOrUUID = input.substring(8, firstArgumentSeparator);
                                 String checkForIGN = com.udu3324.api.IGN.find(ignOrUUID);
+
+                                //filter out reports with incorrect IGNs
                                 if (checkForIGN.equals("Not a IGN or UUID!")) {
                                     report.reply("The IGN/UUID is wrong! Check for typos.").queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
                                     report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
                                 } else {
                                     String UUID = com.udu3324.api.UUID.find(checkForIGN);
-                                    boolean isScammer = ScammerStatus.get(UUID);
+                                    //a lot of boolean checks
+                                    boolean isScammerInDatabase = ScammerStatusDatabase.get(UUID);
+                                    boolean isScammerInMWDiscord = ScammerStatusDatabase.get(UUID);
                                     boolean isAlreadyReported = AlreadyReported.get(UUID);
-                                    if (isScammer) {
+                                    //checks for already scammer status
+                                    if (isScammerInDatabase || isScammerInMWDiscord) {
                                         report.reply("Sorry, but this person is already a scammer.").queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
                                         report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
                                     } else {
+                                        //checks for already reported status
                                         if (isAlreadyReported) {
                                             report.reply("Sorry, but this person has been already reported.").queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
                                             report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
                                         } else {
+                                            //gets userID
                                             String temp = String.valueOf(report.getAuthor());
                                             int substring1 = String.valueOf(report.getAuthor()).indexOf("(") + 1;
                                             int substring2 = String.valueOf(report.getAuthor()).length() - 1;
                                             String userID = temp.substring(substring1, substring2);
-
+                                            //gets stolen/scammed for and video proof
                                             String IGN = com.udu3324.api.IGN.find(checkForIGN);
-                                            int secondVerticalBar = input.indexOf(" - ", firstVerticalBar + 3);
-                                            String scammedFor = input.substring(firstVerticalBar + 3, secondVerticalBar);
-                                            String videoLink = input.substring(secondVerticalBar + 3);
+                                            int secondArgumentSeparator = input.indexOf(" - ", firstArgumentSeparator + 3);
+                                            String scammedFor = input.substring(firstArgumentSeparator + 3, secondArgumentSeparator);
+                                            String videoLink = input.substring(secondArgumentSeparator + 3);
 
                                             EmbedBuilder eb2 = new EmbedBuilder();
                                             eb2.setAuthor(IGN + " (report waiting to be confirmed)", null, null);
@@ -90,6 +98,7 @@ public class Report extends ListenerAdapter {
                                             eb2.addField("Reported By", "<@" + userID + ">", false);
                                             eb2.setColor(new Color(0x181818));
                                             eb2.setFooter("To report another scammer, do \"" + Data.command + "report [player-ign/uuid] - [what they scammed] - [youtube link]\" again.");
+                                            //this is optional and is to get players opinions
                                             report.reply(eb2.build()).queue(message -> {
                                                 message.addReaction("\u2705").queue();
                                                 message.addReaction("\u274E").queue();
@@ -128,10 +137,9 @@ public class Report extends ListenerAdapter {
                     "**Examples That Would Work** \n" +
                     Data.command + "report NintendoOS - dyrn - https://www.youtube.com/watch?v=dQw4w9WgXcQ \n" +
                     Data.command + "report edd3eaa1-31db-4faf-903e-fbcfd3b501d3 - emp - https://www.youtube.com/watch?v=D1qU745zMKU \n" +
-                    Data.command + "report edd3eaa131db4faf903efbcfd3b501d3 - deez nuts - https://www.youtube.com/watch?v=zYUvgxwuJbA ");
+                    Data.command + "report edd3eaa131db4faf903efbcfd3b501d3 - deggs - https://www.youtube.com/watch?v=zYUvgxwuJbA ");
             channel.sendMessage(eb3.build()).queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));
             report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
         }
-
     }
 }

@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import java.awt.*;
 
 public class Credits extends ListenerAdapter {
+    //credits command
     public void onMessageReceived(MessageReceivedEvent event) {
         Message credits = event.getMessage();
 

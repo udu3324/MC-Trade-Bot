@@ -13,6 +13,7 @@ import java.awt.*;
 import java.util.Date;
 
 public class Info extends ListenerAdapter {
+    //info command
     public void onMessageReceived(MessageReceivedEvent event) {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Info");

@@ -13,6 +13,7 @@ import java.awt.*;
 import java.util.Date;
 
 public class Rules extends ListenerAdapter {
+    //rule command
     public void onMessageReceived(MessageReceivedEvent event) {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Rules");

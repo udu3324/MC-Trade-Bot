@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MoveAcceptedReport {
+    // Class Info - .move is a void and moves the report to confirmed.txt
     public static void move(String uuid) throws IOException {
         uuid = uuid.replace("-", "");
         File myObj = new File("unconfirmed.txt");
@@ -18,8 +19,10 @@ public class MoveAcceptedReport {
                 System.out.println("Deleted the file: " + myObj.getName());
                 int indexOfUUID = Arrays.asList(unconfirmedContents).indexOf(uuid);
                 FileWriter myWriter = new FileWriter("confirmed.txt", true);
+                //write uuid, stolen, and proof to confirmed.txt
                 myWriter.write(unconfirmedContents[indexOfUUID] + "\n" + unconfirmedContents[indexOfUUID + 1] + "\n" + unconfirmedContents[indexOfUUID + 2] + "\n");
                 myWriter.close();
+                //remove uuid, stolen, and proof from array
                 unconfirmedContents = ArrayUtils.remove(unconfirmedContents, indexOfUUID);
                 unconfirmedContents = ArrayUtils.remove(unconfirmedContents, indexOfUUID);
                 unconfirmedContents = ArrayUtils.remove(unconfirmedContents, indexOfUUID);
@@ -28,6 +31,7 @@ public class MoveAcceptedReport {
                     if (myObj2.createNewFile()) {
                         System.out.println("File created: " + myObj2.getName());
                         FileWriter writer = new FileWriter("unconfirmed.txt");
+                        //create unconfirmed.txt with new array
                         for (String str : unconfirmedContents) {
                             writer.write(str + System.lineSeparator());
                         }

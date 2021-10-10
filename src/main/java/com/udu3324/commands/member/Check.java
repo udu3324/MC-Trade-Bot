@@ -19,6 +19,8 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class Check extends ListenerAdapter {
+    SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMMMMMMM dd, yyyy");
+
     public void onMessageReceived(MessageReceivedEvent event) {
         boolean isStaffMember = StaffCheck.isStaffMember(event.getMember());
 
@@ -58,59 +60,8 @@ public class Check extends ListenerAdapter {
                         } else {
                             String IGN2 = com.udu3324.api.IGN.find(input);
                             String UUID = com.udu3324.api.UUID.find(input);
-                            boolean isScammer = ScammerStatus.get(UUID);
 
-                            if (isScammer) {
-                                String[] str = ScammerInfo.get(UUID);
-                                JsonArray array = IGNHistory.find(input);
-                                int arrayIndex = array.size() - 1;
-                                StringBuilder pastIGNField = new StringBuilder();
-                                do {
-                                    JsonElement currentArray = array.get(arrayIndex);
-                                    String currentString = currentArray.toString();
-                                    int nameIndex = currentString.indexOf("\"name\":\"") + 8;
-                                    int nameIndex2 = currentString.indexOf("\",\"");
-                                    if (nameIndex2 <= -1) {
-                                        nameIndex2 = currentString.indexOf("\"}");
-                                        String ign = currentString.substring(nameIndex, nameIndex2);
-                                        pastIGNField.append(ign);
-                                        break;
-                                    }
-                                    String ign = currentString.substring(nameIndex, nameIndex2);
-                                    int timeIndex = currentString.indexOf("\"changedToAt\":") + 14;
-                                    int timeIndex2 = currentString.indexOf("}");
-                                    String time = currentString.substring(timeIndex, timeIndex2);
-
-                                    long unixSeconds = Long.parseLong(time);
-                                    Date date = new java.util.Date(unixSeconds);
-                                    SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMMMMMMM dd, yyyy");
-                                    String formattedDate = sdf.format(date);
-                                    pastIGNField.append(ign).append(" - ").append(formattedDate).append("\n");
-                                    arrayIndex--;
-                                } while (arrayIndex >= 0);
-                                EmbedBuilder eb = new EmbedBuilder();
-                                eb.setAuthor(IGN2, null, null);
-                                eb.setDescription("[" + UUID + "](https://namemc.com/profile/" + IGN2 + ")\n" + "This person is a scammer! Don't trade with them unless you know what you're doing!");
-                                eb.setThumbnail("https://crafatar.com/renders/body/" + UUID + "?overlay");
-                                eb.addField("Scammed For", str[0], false);
-                                eb.addField("Proof", str[1], false);
-                                if (pastIGNField.length() < 1) {
-                                    pastIGNField = new StringBuilder(pastIGNField.substring(0, pastIGNField.length()));
-                                    pastIGNField.append("No past usernames.");
-                                }
-                                eb.addField("Past Usernames", FixDiscordSyntax.fix(String.valueOf(pastIGNField)), false);
-                                eb.setColor(new Color(0xBB2F2D));
-                                eb.setFooter("To check for another scammer, do \"" + Data.command + "check [insert ign/uuid]\" again.");
-                                check.reply(eb.build()).queue();
-                            } else {
-                                EmbedBuilder eb = new EmbedBuilder();
-                                eb.setAuthor(IGN2, null, null);
-                                eb.setDescription("[" + UUID + "](https://namemc.com/profile/" + IGN2 + ")\n" + "This person is not a scammer. You don't have to worry that much.");
-                                eb.setThumbnail("https://crafatar.com/renders/body/" + UUID + "?overlay");
-                                eb.setColor(new Color(0xA1DC5C));
-                                eb.setFooter("To check for another scammer, do \"" + Data.command + "check [insert ign/uuid]\" again.");
-                                check.reply(eb.build()).queue();
-                            }
+                            sendCheck(ScammerStatusDatabase.get(UUID), ScammerStatusMWDiscord.get(UUID), UUID, IGN2, input, check);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -132,6 +83,62 @@ public class Check extends ListenerAdapter {
                     Data.command + "check edd3eaa131db4faf903efbcfd3b501d3");
             channel.sendMessage(eb3.build()).queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));
             check.delete().queueAfter(500, TimeUnit.MILLISECONDS);
+        }
+    }
+    public void sendCheck(boolean isScammerInDatabase, boolean isScammerInMWDiscord, String UUID, String IGN2, String input, Message check) throws Exception {
+        if (isScammerInDatabase || isScammerInMWDiscord) {
+            String[] str = ScammerInfo.get(UUID);
+            JsonArray array = IGNHistory.find(input);
+            int index = array.size() - 1;
+            StringBuilder pastIGNField = new StringBuilder();
+            do {
+                JsonElement currentArray = array.get(index);
+                String arrStr = currentArray.toString();
+                int nameIndex = arrStr.indexOf("\"name\":\"") + 8;
+                int nameIndex2 = arrStr.indexOf("\",\"");
+                if (nameIndex2 <= -1) { //code below is to stop loop before last ign (last ign does not cache date)
+                    nameIndex2 = arrStr.indexOf("\"}");
+                    String ign = arrStr.substring(nameIndex, nameIndex2); //ign
+                    pastIGNField.append(ign);
+                    break;
+                }
+                String ign = arrStr.substring(nameIndex, nameIndex2); //ign
+
+                String time = arrStr.substring(arrStr.indexOf("\"changedToAt\":") + 14, arrStr.indexOf("}")); //time
+                Date date = new Date(Long.parseLong(time));
+                String formattedDate = sdf.format(date);
+                pastIGNField.append(ign).append(" - ").append(formattedDate).append("\n");
+                index--;
+            } while (index >= 0);
+
+            String description;
+            if (isScammerInDatabase && isScammerInMWDiscord) {
+                description = "This person is a scammer! Reports were found from the Database and the MW Discord. Don't trade with them unless you know what you're doing!";
+            } else if (isScammerInDatabase) {
+                description = "This person is a scammer! Reports were found from the Database. Don't trade with them unless you know what you're doing!";
+            } else {
+                description = "This person is a scammer! Reports were found from the MW Discord. Don't trade with them unless you know what you're doing!";
+            }
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setAuthor(IGN2, null, null);
+            eb.setDescription("[" + UUID + "](https://namemc.com/profile/" + IGN2 + ")\n" + description);
+            eb.setThumbnail("https://crafatar.com/renders/body/" + UUID + "?overlay");
+            if (isScammerInDatabase) {
+                eb.addField("Scammed For", str[0], false);
+                eb.addField("Proof", str[1], false);
+            }
+            eb.addField("Past Usernames", FixDiscordSyntax.fix(String.valueOf(pastIGNField)), false);
+            eb.setColor(new Color(0xBB2F2D));
+            eb.setFooter("To check for another scammer, do \"" + Data.command + "check [insert ign/uuid]\" again.");
+            check.reply(eb.build()).queue();
+        } else {
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setAuthor(IGN2, null, null);
+            eb.setDescription("[" + UUID + "](https://namemc.com/profile/" + IGN2 + ")\n" + "This person isn't a scammer. No reports were found from the Database or MW Discord. You don't have to worry that much.");
+            eb.setThumbnail("https://crafatar.com/renders/body/" + UUID + "?overlay");
+            eb.setColor(new Color(0xA1DC5C));
+            eb.setFooter("To check for another scammer, do \"" + Data.command + "check [insert ign/uuid]\" again.");
+            check.reply(eb.build()).queue();
         }
     }
 }

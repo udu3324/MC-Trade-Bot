@@ -1,25 +1,21 @@
 package com.udu3324.main;
 
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class Data extends ListenerAdapter {
+import java.util.Objects;
+
+public class Data {
+    // JDA Bot Stuff
     public static final String command = ">";
+    public static final String activity = "play.minewind.net";
+
+    // MW Scammer Discord
+    private static final String guildID = "883832292466892841";
+    public static final String staffRoleID = "884189692780756992";
     public static final String reportChannelID = "884189288974139392";
     public static final String checkChannelID = "884189308959981598";
-    public static final String staffRoleID = "884189692780756992";
-    protected static final String activity = "play.minewind.net";
-    public static TextChannel report;
-    public static TextChannel check;
+    public static TextChannel report = Objects.requireNonNull(MainBot.getJda().getGuildById(guildID)).getTextChannelById(reportChannelID);
+    public static TextChannel check = Objects.requireNonNull(MainBot.getJda().getGuildById(guildID)).getTextChannelById(checkChannelID);
 
-    public void onMessageReceived(MessageReceivedEvent event) {
-        Message autoSession = event.getMessage();
-        if (autoSession.isFromType(ChannelType.TEXT)) {
-            report = event.getGuild().getTextChannelById(reportChannelID);
-            check = event.getGuild().getTextChannelById(checkChannelID);
-        }
-    }
+    // MW Discord
 }

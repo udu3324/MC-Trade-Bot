@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DeleteRejectedReport {
+    //Class Info - .delete returns void and deletes reports that are rejected from unconfirmed.txt
     public static void delete(String uuid) throws IOException {
         uuid = uuid.replace("-", "");
         File myObj = new File("unconfirmed.txt");
@@ -17,6 +18,7 @@ public class DeleteRejectedReport {
             if (myObj.delete()) {
                 System.out.println("Deleted the file: " + myObj.getName());
                 int indexOfUUID = Arrays.asList(unconfirmedContents).indexOf(uuid);
+                //remove uuid, stolen, and proof from array
                 unconfirmedContents = ArrayUtils.remove(unconfirmedContents, indexOfUUID);
                 unconfirmedContents = ArrayUtils.remove(unconfirmedContents, indexOfUUID);
                 unconfirmedContents = ArrayUtils.remove(unconfirmedContents, indexOfUUID);
@@ -25,6 +27,7 @@ public class DeleteRejectedReport {
                     if (myObj2.createNewFile()) {
                         System.out.println("File created: " + myObj2.getName());
                         FileWriter writer = new FileWriter("unconfirmed.txt");
+                        //write array back to new unconfirmed.txt
                         for (String str : unconfirmedContents) {
                             writer.write(str + System.lineSeparator());
                         }

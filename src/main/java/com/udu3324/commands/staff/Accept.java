@@ -12,6 +12,7 @@ import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 public class Accept extends ListenerAdapter {
+    //accept command
     public void onMessageReceived(MessageReceivedEvent event) {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Wrong Syntax!");

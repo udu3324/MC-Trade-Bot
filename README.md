@@ -15,7 +15,7 @@
 # THIS IS NOT A BOT TO HELP OR PROMOTE SCAMMING
 
 ## About the Bot
-MW Scammer Bot is by udu3324. The bot is a tool to help traders on MW to find scammers and report them. (qol stuff)
+MW Scammer Bot is by udu3324. MW Scammer Bot is a QOL tool for traders on MW. You can easily report scammers and check for their status.
 
 ## Bot Documentation
 Direct message `_._#3324` on discord to get help n stuff.

@@ -7,16 +7,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AlreadyReported {
-    //checks if there's already a report about someone
+public class ScammerStatusMWDiscord {
+    //Class Info - .get returns if uuid is found as a scammer in the mw discord
     public static boolean get(String uuid) throws IOException {
         uuid = uuid.replace("-", "");
-        String[] str = str();
-        return Arrays.asList(str).contains(uuid);
+        return Arrays.asList(str()).contains(uuid);
     }
 
     private static String[] str() throws IOException {
-        FileReader fileReader = new FileReader("unconfirmed.txt");
+        FileReader fileReader = new FileReader("mwdiscord.txt");
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         List<String> lines = new ArrayList<>();
         String line;
