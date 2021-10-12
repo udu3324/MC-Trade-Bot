@@ -12,11 +12,23 @@ public class AlreadyReported {
     public static boolean get(String uuid) throws IOException {
         uuid = uuid.replace("-", "");
         String[] str = str();
-        return Arrays.asList(str).contains(uuid);
+        String[] str2 = str2();
+        return Arrays.asList(str).contains(uuid) || Arrays.asList(str2).contains(uuid);
     }
 
     private static String[] str() throws IOException {
         FileReader fileReader = new FileReader("unconfirmed.txt");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        List<String> lines = new ArrayList<>();
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            lines.add(line);
+        }
+        bufferedReader.close();
+        return lines.toArray(new String[0]);
+    }
+    private static String[] str2() throws IOException {
+        FileReader fileReader = new FileReader("mwdiscord.txt");
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         List<String> lines = new ArrayList<>();
         String line;
