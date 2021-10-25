@@ -2,9 +2,7 @@ package com.udu3324.main;
 
 import com.udu3324.commands.member.*;
 import com.udu3324.commands.staff.Accept;
-import com.udu3324.commands.staff.Info;
 import com.udu3324.commands.staff.Reject;
-import com.udu3324.commands.staff.Rules;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -35,7 +33,7 @@ public class MainBot {
                            "+-------------------------------------------+");
         jda = JDABuilder
                 .createLight(Token.token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
-                .addEventListeners(new Credits(), new Ping(), new Help(), new Check(), new Report(), new Accept(), new Reject(), new Info(), new Rules())
+                .addEventListeners(new Credits(), new Ping(), new Help(), new Check(), new Report(), new Accept(), new Reject())
                 .setActivity(Activity.playing(Data.activity))
                 .build();
 
