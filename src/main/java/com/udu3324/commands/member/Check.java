@@ -19,7 +19,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class Check extends ListenerAdapter {
-    SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMMMMMMM dd, yyyy");
+    final SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMMMMMMM dd, yyyy");
 
     public void onMessageReceived(MessageReceivedEvent event) {
         boolean isStaffMember = StaffCheck.isStaffMember(event.getMember());
@@ -85,6 +85,7 @@ public class Check extends ListenerAdapter {
             check.delete().queueAfter(500, TimeUnit.MILLISECONDS);
         }
     }
+
     public void sendCheck(boolean isScammerInDatabase, boolean isScammerInMWDiscord, String UUID, String IGN2, String input, Message check) throws Exception {
         if (isScammerInDatabase || isScammerInMWDiscord) {
             String[] str = ScammerInfo.get(UUID);

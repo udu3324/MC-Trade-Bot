@@ -27,6 +27,7 @@ public class AlreadyReported {
         bufferedReader.close();
         return lines.toArray(new String[0]);
     }
+
     private static String[] str2() throws IOException {
         FileReader fileReader = new FileReader("mwdiscord.txt");
         BufferedReader bufferedReader = new BufferedReader(fileReader);
