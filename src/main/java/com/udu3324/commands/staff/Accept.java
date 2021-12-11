@@ -21,9 +21,9 @@ public class Accept extends ListenerAdapter {
                 Data.command + "accept [player-ign/uuid]" +
                 "```\n" +
                 "**Examples That Would Work** \n" +
-                Data.command + "accept NintendoOS \n" +
-                Data.command + "accept edd3eaa1-31db-4faf-903e-fbcfd3b501d3 \n" +
-                Data.command + "accept edd3eaa131db4faf903efbcfd3b501d3 ");
+                Data.command + "accept Notch \n" +
+                Data.command + "accept 069a79f4-44e9-4726-a5be-fca90e38aaf5 \n" +
+                Data.command + "accept 069a79f444e94726a5befca90e38aaf5 ");
         eb.setColor(new Color(0x6F2EBB));
 
         boolean isStaffMember = StaffCheck.isStaffMember(event.getMember());

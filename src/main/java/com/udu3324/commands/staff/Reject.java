@@ -21,9 +21,9 @@ public class Reject extends ListenerAdapter {
                 Data.command + "reject [player-ign/uuid]" +
                 "```\n" +
                 "**Examples That Would Work** \n" +
-                Data.command + "reject NintendoOS \n" +
-                Data.command + "reject edd3eaa1-31db-4faf-903e-fbcfd3b501d3 \n" +
-                Data.command + "reject edd3eaa131db4faf903efbcfd3b501d3 ");
+                Data.command + "reject Notch \n" +
+                Data.command + "reject 069a79f4-44e9-4726-a5be-fca90e38aaf5 \n" +
+                Data.command + "reject 069a79f444e94726a5befca90e38aaf5 ");
         eb.setColor(new Color(0x6F2EBB));
 
         boolean isStaffMember = StaffCheck.isStaffMember(event.getMember());

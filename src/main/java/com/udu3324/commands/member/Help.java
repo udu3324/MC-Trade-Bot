@@ -16,7 +16,7 @@ public class Help extends ListenerAdapter {
         if (help.getContentRaw().equals(Data.command + "help")) {
             EmbedBuilder eb = new EmbedBuilder();
             eb.setTitle("Help");
-            eb.setDescription("Minewind Scammer Bot is a bot that reports and handles reports of scammers.");
+            eb.setDescription("MC Trade Bot is a bot that reports and handles reports of scammers on MC.");
             eb.addField("Prefix", "The current prefix set is **" + Data.command + "**", false);
 
             eb.addField("Member Commands",

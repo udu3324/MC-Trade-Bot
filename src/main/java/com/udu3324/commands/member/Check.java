@@ -26,7 +26,7 @@ public class Check extends ListenerAdapter {
 
         MessageChannel channel = event.getChannel();
         Message check = event.getMessage();
-        if (check.getContentRaw().contains(Data.command + "check") && !(check.getChannel() == Data.report) && !(check.getContentRaw().length() <= 6)) {
+        if (check.getContentRaw().contains(Data.command + "check") && !(channel.getIdLong() == Data.reportChannelID) && !(check.getContentRaw().length() <= 6)) {
             long waitTime = RandomInt.get(3000, 6000);
             String input = check.getContentRaw().substring(7);
 
@@ -51,9 +51,9 @@ public class Check extends ListenerAdapter {
                                     Data.command + "check [insert ign/uuid here]" +
                                     "```\n" +
                                     "**Examples That Would Work** \n" +
-                                    Data.command + "check NintendoOS \n" +
-                                    Data.command + "check edd3eaa1-31db-4faf-903e-fbcfd3b501d3 \n" +
-                                    Data.command + "check edd3eaa131db4faf903efbcfd3b501d3");
+                                    Data.command + "check Notch \n" +
+                                    Data.command + "check 069a79f4-44e9-4726-a5be-fca90e38aaf5 \n" +
+                                    Data.command + "check 069a79f444e94726a5befca90e38aaf5 ");
                             eb.setColor(new Color(0xFFC400));
                             check.reply(eb.build()).queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
                             check.delete().queue();
@@ -61,7 +61,14 @@ public class Check extends ListenerAdapter {
                             String IGN2 = com.udu3324.api.IGN.find(input);
                             String UUID = com.udu3324.api.UUID.find(input);
 
-                            sendCheck(ScammerStatusDatabase.get(UUID), ScammerStatusMWDiscord.get(UUID), UUID, IGN2, input, check);
+                            boolean mwDiscord;
+                            if (Data.mwMode) {
+                                mwDiscord = ScammerStatusMWDiscord.get(UUID);
+                            } else {
+                                mwDiscord = false;
+                            }
+
+                            sendCheck(ScammerStatusDatabase.get(UUID), mwDiscord, UUID, IGN2, input, check);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -69,7 +76,7 @@ public class Check extends ListenerAdapter {
                 }
             };
             timer.schedule(task, waitTime);
-        } else if (check.getChannel() == Data.check && !event.getAuthor().isBot() && !isStaffMember) {
+        } else if (channel.getIdLong() == Data.checkChannelID && !event.getAuthor().isBot() && !isStaffMember) {
             channel.sendMessage("Hey! You aren't allowed to talk here unless if you're checking for a scammer.").queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));
             EmbedBuilder eb3 = new EmbedBuilder();
             eb3.setTitle("Use this channel correctly!");
@@ -78,9 +85,9 @@ public class Check extends ListenerAdapter {
                     Data.command + "check [insert ign/uuid here]" +
                     "```\n" +
                     "**Examples That Would Work** \n" +
-                    Data.command + "check NintendoOS \n" +
-                    Data.command + "check edd3eaa1-31db-4faf-903e-fbcfd3b501d3 \n" +
-                    Data.command + "check edd3eaa131db4faf903efbcfd3b501d3");
+                    Data.command + "check Notch \n" +
+                    Data.command + "check 069a79f4-44e9-4726-a5be-fca90e38aaf5 \n" +
+                    Data.command + "check 069a79f444e94726a5befca90e38aaf5 ");
             channel.sendMessage(eb3.build()).queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));
             check.delete().queueAfter(500, TimeUnit.MILLISECONDS);
         }
@@ -135,7 +142,11 @@ public class Check extends ListenerAdapter {
         } else {
             EmbedBuilder eb = new EmbedBuilder();
             eb.setAuthor(IGN2, null, null);
-            eb.setDescription("[" + UUID + "](https://namemc.com/profile/" + IGN2 + ")\n" + "This person isn't a scammer. No reports were found from the Database or MW Discord. You don't have to worry that much.");
+            if (Data.mwMode) {
+                eb.setDescription("[" + UUID + "](https://namemc.com/profile/" + IGN2 + ")\n" + "This person isn't a scammer. No reports were found from the Database or MW Discord. You don't have to worry that much.");
+            } else {
+                eb.setDescription("[" + UUID + "](https://namemc.com/profile/" + IGN2 + ")\n" + "This person isn't a scammer. No reports were found from the Database. You don't have to worry that much.");
+            }
             eb.setThumbnail("https://crafatar.com/renders/body/" + UUID + "?overlay");
             eb.setColor(new Color(0xA1DC5C));
             eb.setFooter("To check for another scammer, do \"" + Data.command + "check [insert ign/uuid]\" again.");

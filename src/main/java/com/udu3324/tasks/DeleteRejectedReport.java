@@ -2,10 +2,10 @@ package com.udu3324.tasks;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 public class DeleteRejectedReport {
     //Class Info - .delete returns void and deletes reports that are rejected from unconfirmed.txt
@@ -13,7 +13,7 @@ public class DeleteRejectedReport {
         uuid = uuid.replace("-", "");
         File myObj = new File("unconfirmed.txt");
 
-        String[] unconfirmedContents = str();
+        String[] unconfirmedContents = TXTasArray.get("unconfirmed.txt");
         if (Arrays.asList(unconfirmedContents).contains(uuid)) {
             if (myObj.delete()) {
                 System.out.println("Deleted the file: " + myObj.getName());
@@ -43,17 +43,5 @@ public class DeleteRejectedReport {
                 System.out.println("Failed to delete the file.");
             }
         }
-    }
-
-    private static String[] str() throws IOException {
-        FileReader fileReader = new FileReader("unconfirmed.txt");
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        List<String> lines = new ArrayList<>();
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            lines.add(line);
-        }
-        bufferedReader.close();
-        return lines.toArray(new String[0]);
     }
 }
