@@ -45,7 +45,7 @@ public class Accept extends ListenerAdapter {
                         eb2.setTitle("Accepted scammer report for " + checkForIGN + ".");
                         eb2.setDescription("Thank you for your scammer report! It has been accepted and now added onto the scammer list.");
                         eb2.setThumbnail("https://crafatar.com/renders/body/" + uuid + "?overlay");
-                        eb2.setFooter("To report another scammer, do \"" + Data.command + "report [player-ign/uuid] - [what they scammed] - [youtube link]\" again.");
+                        eb2.setFooter(Data.command + "report [ign/uuid] - [scammed items] - [vid url]");
                         eb2.setColor(new Color(0x6ABB00));
                         accept.reply(eb2.build()).queue();
                     }

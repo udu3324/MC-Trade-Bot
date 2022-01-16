@@ -29,17 +29,17 @@ public class Report extends ListenerAdapter {
 
         EmbedBuilder eb2 = new EmbedBuilder();
         eb2.setAuthor(IGN + " (report waiting to be confirmed)", null, null);
-        eb2.setDescription("[" + UUID + "](https://namemc.com/profile/" + checkForIGN + ")\n" + "This person is a **REPORTED** scammer! Don't trade with them unless you know what you're doing!");
+        eb2.setDescription("[" + UUID + "](https://namemc.com/profile/" + checkForIGN + ")\n" + "This person is a **REPORTED** scammer! This report has not been confirmed yet.");
         eb2.setThumbnail("https://crafatar.com/renders/body/" + UUID + "?overlay");
         eb2.addField("Scammed For", scammedFor, false);
         eb2.addField("Proof", videoLink, false);
         eb2.addField("Reported By", "<@" + userID + ">", false);
         eb2.setColor(new Color(0x181818));
-        eb2.setFooter("To report another scammer, do \"" + Data.command + "report [player-ign/uuid] - [what they scammed] - [youtube link]\" again.");
+        eb2.setFooter(Data.command + "report [ign/uuid] - [scammed items] - [vid url]");
         //this is optional and is to get players opinions
         report.reply(eb2.build()).queue(message -> {
-            message.addReaction("\u2705").queue();
-            message.addReaction("\u274E").queue();
+            message.addReaction("\u2b06").queue();
+            message.addReaction("\u2b07").queue();
         });
         CreateReport.create(UUID, scammedFor, videoLink);
     }
@@ -135,7 +135,7 @@ public class Report extends ListenerAdapter {
                 channel.sendMessage("Hey! You can only use that command in <#" + Data.reportChannelID + ">. ").queue(message -> message.delete().queueAfter(5, TimeUnit.SECONDS));
                 report.delete().queueAfter(3, TimeUnit.SECONDS);
             }
-        } else if (channel.getIdLong() == Data.reportChannelID && !event.getAuthor().isBot() && !isStaffMember && !report.getContentRaw().contains(Data.command + "reject") && !report.getContentRaw().contains(Data.command + "accept")) {
+        } else if (channel.getIdLong() == Data.reportChannelID && !event.getAuthor().isBot() && !isStaffMember && !report.getContentRaw().contains(Data.command + "reject") && !report.getContentRaw().contains(Data.command + "accept") && !(event.getAuthor().getIdLong() == Data.maintainerID)) {
             channel.sendMessage("Hey! You aren't allowed to talk here unless if you're submitting a scammer report.").queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));
             channel.sendMessage(contextInvalid.build()).queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));
             report.delete().queueAfter(500, TimeUnit.MILLISECONDS);

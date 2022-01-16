@@ -45,7 +45,7 @@ public class Reject extends ListenerAdapter {
                         eb2.setTitle("Rejected scammer report for " + checkForIGN + ".");
                         eb2.setDescription("Your report is not satisfactory. Submit a better one. ");
                         eb2.setThumbnail("https://crafatar.com/renders/body/" + uuid + "?overlay");
-                        eb2.setFooter("To report another scammer, do \"" + Data.command + "report [player-ign/uuid] - [what they scammed] - [youtube link]\" again.");
+                        eb2.setFooter(Data.command + "report [ign/uuid] - [scammed items] - [vid url]");
                         eb2.setColor(new Color(0xBB2F2D));
                         reject.reply(eb2.build()).queue();
                     }

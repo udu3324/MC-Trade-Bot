@@ -12,6 +12,9 @@ public class Data {
     public static Long reportChannelID = 100000000000000000L;
     public static Long checkChannelID = 100000000000000000L;
 
+    //message does not get deleted in the specific channels if it matches user id
+    public static Long maintainerID = 100000000000000000L;
+
     // mw mode is for mw discord
     public static Boolean mwMode = false;
 
@@ -22,6 +25,7 @@ public class Data {
             guildID = "647632646695944192";
             reportChannelID = 684880075752996937L;
             checkChannelID = 897310408224931860L;
+            maintainerID = 395649963415306242L;
         }
     }
 }
