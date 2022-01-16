@@ -116,7 +116,7 @@ public class Check extends ListenerAdapter {
 
             EmbedBuilder eb = new EmbedBuilder();
             eb.setAuthor(IGN, null, null);
-            eb.setDescription("[" + UUID + "](https://namemc.com/profile/" + IGN + ")\n" + "This person is was reported " +
+            eb.setDescription("[" + UUID + "](https://namemc.com/profile/" + IGN + ")\n" + "This person is reported " +
                     "but the **report hasn't been accepted or rejected** yet. Trade with this person with caution. \n\n" +
                     "If you feel like need staff to take action of this report, tell them.");
             eb.setThumbnail("https://crafatar.com/renders/body/" + UUID + "?overlay");
