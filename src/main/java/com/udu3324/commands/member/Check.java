@@ -118,7 +118,7 @@ public class Check extends ListenerAdapter {
             eb.setAuthor(IGN, null, null);
             eb.setDescription("[" + UUID + "](https://namemc.com/profile/" + IGN + ")\n" + "This person is reported " +
                     "but the **report hasn't been accepted or rejected** yet. Trade with this person with caution. \n\n" +
-                    "If you feel like need staff to take action of this report, tell them.");
+                    "If you feel like staff need to take action of this report, tell them.");
             eb.setThumbnail("https://crafatar.com/renders/body/" + UUID + "?overlay");
             eb.addField("Scammed For", str[0], false);
             eb.addField("Proof", str[1], false);
