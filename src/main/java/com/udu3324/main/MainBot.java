@@ -23,8 +23,8 @@ public class MainBot {
                 "| Discord.                                 |\n" +
                 "+------------------------------------------+");
         JDABuilder
-                .createLight(Token.token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
-                .addEventListeners(new ReadyListener(), new DeleteEditedMessages(), new Credits(), new Ping(), new Help(), new Check(), new Report(), new Accept(), new Reject())
+                .createLight(Data.token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
+                .addEventListeners(new ReadyListener(), new DeleteEditedMessages(), new Ping(), new Help(), new Check(), new Report(), new Accept(), new Reject())
                 .build();
     }
 }

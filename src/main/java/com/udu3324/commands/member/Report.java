@@ -104,10 +104,9 @@ public class Report extends ListenerAdapter {
                                 String UUID = com.udu3324.api.UUID.find(checkForIGN);
                                 //a lot of boolean checks
                                 boolean isScammerInDatabase = ScammerStatusDatabase.get(UUID);
-                                boolean isScammerInMWDiscord = ScammerStatusDatabase.get(UUID);
                                 boolean isAlreadyReported = AlreadyReported.get(UUID);
                                 //checks for already scammer status
-                                if (isScammerInDatabase || isScammerInMWDiscord) {
+                                if (isScammerInDatabase) {
                                     report.reply("Sorry, but this person is already a scammer.").queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
                                     report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
                                 } else {
@@ -135,7 +134,7 @@ public class Report extends ListenerAdapter {
                 channel.sendMessage("Hey! You can only use that command in <#" + Data.reportChannelID + ">. ").queue(message -> message.delete().queueAfter(5, TimeUnit.SECONDS));
                 report.delete().queueAfter(3, TimeUnit.SECONDS);
             }
-        } else if (channel.getIdLong() == Data.reportChannelID && !event.getAuthor().isBot() && !isStaffMember && !report.getContentRaw().contains(Data.command + "reject") && !report.getContentRaw().contains(Data.command + "accept") && !(event.getAuthor().getIdLong() == Data.maintainerID)) {
+        } else if (channel.getIdLong() == Data.reportChannelID && !event.getAuthor().isBot() && !isStaffMember && !report.getContentRaw().contains(Data.command + "reject") && !report.getContentRaw().contains(Data.command + "accept")) {
             channel.sendMessage("Hey! You aren't allowed to talk here unless if you're submitting a scammer report.").queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));
             channel.sendMessage(contextInvalid.build()).queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));
             report.delete().queueAfter(500, TimeUnit.MILLISECONDS);

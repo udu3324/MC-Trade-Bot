@@ -11,7 +11,7 @@ public class UnconfirmedReport {
         int getIndex = Arrays.asList(TXTasArray.get("unconfirmed.txt")).indexOf(uuid);
         str[0] = data[getIndex + 1]; //what they stole
         str[1] = data[getIndex + 2]; //proof
-        // This is for if there's no saved database, but it is saved on mw discord
+
         return str;
     }
 }

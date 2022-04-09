@@ -1,7 +1,6 @@
 package com.udu3324.main;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -13,47 +12,31 @@ public class ReadyListener extends ListenerAdapter {
     public void onReady(ReadyEvent ev) {
         JDA jda = ev.getJDA();
 
-        //set channels
-        Guild guild = jda.getGuildById(Data.guildID);
-        assert guild != null;
+        System.out.println("Operating in " + jda.getGuilds().get(0).getName());
 
-        // file check
+        // file check/create
         File unconfirmed = new File("unconfirmed.txt");
         File confirmed = new File("confirmed.txt");
+
         try {
             //check if confirmed.txt exists
             if (confirmed.createNewFile()) {
-                if (Data.mwMode) { //print error
-                    System.out.println("(okay/bad) File created: " + confirmed.getName() + " | if you are starting off with " +
-                            "no confirmed reports, then that's fine. If you want the original database with all the confirmed " +
-                            "reports, msg _._#3324 via discord.");
-                } else {
-                    System.out.println("(okay/bad) File created: " + confirmed.getName() + " | if you are starting off with " +
-                            "no confirmed reports, then that's fine. if you have a previous confirmed.txt, you should replace " +
-                            "the newly created confirmed.txt");
-                }
+                System.out.println("(okay/bad) File created: " + confirmed.getName() +
+                        "\n A text file was created to store confirmed reports." +
+                        "\n If you had previous confirmed reports, replace confirmed.txt with your old confirmed reports file");
             } else {
                 System.out.println("(good) File already exists: " + confirmed.getName());
             }
 
             //check if unconfirmed.txt exists
             if (unconfirmed.createNewFile()) {
-                System.out.println("(okay) File created: " + unconfirmed.getName());
+                System.out.println("(okay/bad) File created: " + unconfirmed.getName() +
+                        "\n A text file was created to store unconfirmed reports." +
+                        "\n If you had previous confirmed reports, replace unconfirmed.txt with your old unconfirmed reports file");
             } else {
                 System.out.println("(good) File already exists: " + unconfirmed.getName());
             }
 
-            // check for mwdiscord.txt if mw mode is activated
-            if (Data.mwMode) {
-                File mwdiscord = new File("mwdiscord.txt");
-                if (mwdiscord.createNewFile()) {
-                    System.out.println("(okay/bad) File created: " + mwdiscord.getName() + " | if you are starting off with " +
-                            "no confirmed reports, then that's fine. If you want the original mw discord reports, msg _._#3324 " +
-                            "via discord.");
-                } else {
-                    System.out.println("(good) File already exists: " + mwdiscord.getName());
-                }
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }

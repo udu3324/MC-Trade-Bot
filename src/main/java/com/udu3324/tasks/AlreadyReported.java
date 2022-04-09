@@ -10,10 +10,6 @@ public class AlreadyReported {
     public static boolean get(String uuid) throws IOException {
         uuid = uuid.replace("-", "");
         String[] str = TXTasArray.get("unconfirmed.txt");
-        if (Data.mwMode) {
-            String[] str2 = TXTasArray.get("mwdiscord.txt");
-            return Arrays.asList(str).contains(uuid) || Arrays.asList(str2).contains(uuid);
-        }
         return Arrays.asList(str).contains(uuid);
     }
 }
