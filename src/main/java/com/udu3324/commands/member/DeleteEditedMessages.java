@@ -14,8 +14,7 @@ public class DeleteEditedMessages extends ListenerAdapter {
         MessageChannel channel = event.getChannel();
         if (channel.getIdLong() == Data.checkChannelID && !event.getAuthor().isBot()) {
             User user = event.getAuthor();
-            Message message = event.getMessage();
-            message.delete().queue();
+            event.getMessage().delete().queue();
             channel.sendMessage("Hey <@" + user.getId() + ">, please do not attempt to talk in this channel. It is" +
                     " for checking scammers only.").queue(msg -> msg.delete().queueAfter(3, TimeUnit.SECONDS));
         }

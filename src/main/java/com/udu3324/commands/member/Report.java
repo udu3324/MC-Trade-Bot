@@ -21,6 +21,7 @@ public class Report extends ListenerAdapter {
         int substring1 = String.valueOf(report.getAuthor()).indexOf("(") + 1;
         int substring2 = String.valueOf(report.getAuthor()).length() - 1;
         String userID = temp.substring(substring1, substring2);
+
         //gets stolen/scammed for and video proof
         String IGN = com.udu3324.api.IGN.find(checkForIGN);
         int secondArgumentSeparator = input.indexOf(" - ", firstArgumentSeparator + 3);
@@ -36,6 +37,7 @@ public class Report extends ListenerAdapter {
         eb2.addField("Reported By", "<@" + userID + ">", false);
         eb2.setColor(new Color(0x181818));
         eb2.setFooter(Data.command + "report [ign/uuid] - [scammed items] - [vid url]");
+
         //this is optional and is to get players opinions
         report.reply(eb2.build()).queue(message -> {
             message.addReaction("\u2b06").queue();
@@ -72,67 +74,73 @@ public class Report extends ListenerAdapter {
 
         Message report = event.getMessage();
         MessageChannel channel = event.getChannel();
+        //if message contains report
         if (report.getContentRaw().contains(Data.command + "report")) {
-            if (channel.getIdLong() == Data.reportChannelID) {
-                //filter out messages with only report and nothing else in it
-                if (report.getContentRaw().equals(Data.command + "report")) {
-                    report.reply(syntaxInvalid.build()).queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));
-                    report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
-                } else if (report.getContentRaw().contains(Data.command + "report ")) {
-                    try {
-                        String input = report.getContentRaw();
+            //check channel
+            if (!(channel.getIdLong() == Data.reportChannelID)) {
+                channel.sendMessage("Hey! You can only use that command in <#" + Data.reportChannelID + ">. ").queue(message -> message.delete().queueAfter(5, TimeUnit.SECONDS));
+                report.delete().queueAfter(3, TimeUnit.SECONDS);
+                return;
+            }
+            //check no args
+            if (report.getContentRaw().equals(Data.command + "report")) {
+                report.reply(syntaxInvalid.build()).queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));
+                report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
+                return;
+            }
+            //check no command (but in channel)
+            if (!report.getContentRaw().contains(Data.command + "report ")) {
+                report.reply(syntaxInvalid.build()).queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
+                report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
+                return;
+            }
 
-                        int firstArgumentSeparator = input.indexOf(" - ");
-                        int lastIndex = 0;
-                        int count = 0;
-                        while (lastIndex != -1) {
-                            lastIndex = input.indexOf(" - ", lastIndex);
-                            if (lastIndex != -1) {
-                                count++;
-                                lastIndex += " - ".length();
-                            }
-                        }
-                        if (count == 2) {
-                            String ignOrUUID = input.substring(8, firstArgumentSeparator);
-                            String checkForIGN = com.udu3324.api.IGN.find(ignOrUUID);
+            try {
+                String input = report.getContentRaw();
 
-                            //filter out reports with incorrect IGNs
-                            if (checkForIGN.equals("Not a IGN or UUID!")) {
-                                report.reply("The IGN/UUID is wrong! Check for typos.").queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
+                int firstArgumentSeparator = input.indexOf(" - ");
+                int lastIndex = 0;
+                int count = 0;
+                while (lastIndex != -1) {
+                    lastIndex = input.indexOf(" - ", lastIndex);
+                    if (lastIndex != -1) {
+                        count++;
+                        lastIndex += " - ".length();
+                    }
+                }
+                if (count == 2) {
+                    String ignOrUUID = input.substring(8, firstArgumentSeparator);
+                    String checkForIGN = com.udu3324.api.IGN.find(ignOrUUID);
+
+                    //filter out reports with incorrect IGNs
+                    if (checkForIGN.equals("Not a IGN or UUID!")) {
+                        report.reply("The IGN/UUID is wrong! Check for typos.").queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
+                        report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
+                    } else {
+                        String UUID = com.udu3324.api.UUID.find(checkForIGN);
+                        //a lot of boolean checks
+                        boolean isScammerInDatabase = ScammerStatusDatabase.get(UUID);
+                        boolean isAlreadyReported = AlreadyReported.get(UUID);
+                        //checks for already scammer status
+                        if (isScammerInDatabase) {
+                            report.reply("Sorry, but this person is already a scammer.").queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
+                            report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
+                        } else {
+                            //checks for already reported status
+                            if (isAlreadyReported) {
+                                report.reply("Sorry, but this person has been already reported.").queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
                                 report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
                             } else {
-                                String UUID = com.udu3324.api.UUID.find(checkForIGN);
-                                //a lot of boolean checks
-                                boolean isScammerInDatabase = ScammerStatusDatabase.get(UUID);
-                                boolean isAlreadyReported = AlreadyReported.get(UUID);
-                                //checks for already scammer status
-                                if (isScammerInDatabase) {
-                                    report.reply("Sorry, but this person is already a scammer.").queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
-                                    report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
-                                } else {
-                                    //checks for already reported status
-                                    if (isAlreadyReported) {
-                                        report.reply("Sorry, but this person has been already reported.").queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
-                                        report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
-                                    } else {
-                                        createReport(report, input, checkForIGN, firstArgumentSeparator, UUID);
-                                    }
-                                }
+                                createReport(report, input, checkForIGN, firstArgumentSeparator, UUID);
                             }
-                        } else {
-                            report.reply(syntaxInvalid.build()).queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
-                            report.delete().queueAfter(3000, TimeUnit.MILLISECONDS);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
                 } else {
                     report.reply(syntaxInvalid.build()).queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
-                    report.delete().queueAfter(500, TimeUnit.MILLISECONDS);
+                    report.delete().queueAfter(3000, TimeUnit.MILLISECONDS);
                 }
-            } else {
-                channel.sendMessage("Hey! You can only use that command in <#" + Data.reportChannelID + ">. ").queue(message -> message.delete().queueAfter(5, TimeUnit.SECONDS));
-                report.delete().queueAfter(3, TimeUnit.SECONDS);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } else if (channel.getIdLong() == Data.reportChannelID && !event.getAuthor().isBot() && !isStaffMember && !report.getContentRaw().contains(Data.command + "reject") && !report.getContentRaw().contains(Data.command + "accept")) {
             channel.sendMessage("Hey! You aren't allowed to talk here unless if you're submitting a scammer report.").queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));

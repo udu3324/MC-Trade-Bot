@@ -29,6 +29,19 @@ public class Accept extends ListenerAdapter {
         boolean isStaffMember = StaffCheck.isStaffMember(event.getMember());
 
         Message accept = event.getMessage();
+
+        if (accept.getContentRaw().contains(Data.command + "accept") && !isStaffMember) {
+            accept.reply("Hey! You are not allowed to use this command.").queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
+            accept.delete().queueAfter(500, TimeUnit.MILLISECONDS);
+            return;
+        }
+
+        if (accept.getContentRaw().equals(Data.command + "accept") && isStaffMember) {
+            accept.reply(eb.build()).queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
+            accept.delete().queueAfter(500, TimeUnit.MILLISECONDS);
+            return;
+        }
+
         if (accept.getContentRaw().contains(Data.command + "accept") && isStaffMember) {
             String input = accept.getContentRaw();
             if (input.length() > 8) {
@@ -56,12 +69,6 @@ public class Accept extends ListenerAdapter {
                 accept.reply(eb.build()).queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
                 accept.delete().queueAfter(500, TimeUnit.MILLISECONDS);
             }
-        } else if (accept.getContentRaw().equals(Data.command + "accept") && isStaffMember) {
-            accept.reply(eb.build()).queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
-            accept.delete().queueAfter(500, TimeUnit.MILLISECONDS);
-        } else if (accept.getContentRaw().contains(Data.command + "accept") && !isStaffMember) {
-            accept.reply("Hey! You are not allowed to use this command.").queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
-            accept.delete().queueAfter(500, TimeUnit.MILLISECONDS);
         }
     }
 }
