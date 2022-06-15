@@ -9,8 +9,7 @@ import java.util.List;
 public class TXTasArray {
     //return an array of string lines in a txt file
     public static String[] get(String file) throws IOException {
-        FileReader fileReader = new FileReader(file);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
         List<String> lines = new ArrayList<>();
 

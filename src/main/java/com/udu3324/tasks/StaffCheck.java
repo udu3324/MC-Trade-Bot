@@ -1,6 +1,6 @@
 package com.udu3324.tasks;
 
-import com.udu3324.main.Data;
+import com.udu3324.main.Config;
 import net.dv8tion.jda.api.entities.Member;
 
 public class StaffCheck {
@@ -9,7 +9,6 @@ public class StaffCheck {
         if (author == null) {
             return false;
         }
-        String userRoles = String.valueOf(author.getRoles());
-        return userRoles.contains(Data.staffRoleID);
+        return String.valueOf(author.getRoles()).contains(Config.staffRoleID);
     }
 }
